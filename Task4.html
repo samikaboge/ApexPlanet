@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internship Full Project</title>
+
+<style>
+    body { font-family: Arial; margin: 0; padding: 0; background: #f4f4f4; }
+
+    header { background: #333; color: #fff; padding: 15px; text-align: center; }
+    section { padding: 20px; margin: 20px; background: white; border-radius: 8px; }
+
+    h2 { color: #333; }
+
+    /* Portfolio */
+    .nav { display: flex; gap: 15px; }
+    .nav a { text-decoration: none; color: blue; font-weight: bold; }
+
+    /* Todo App */
+    #todoList li { margin: 5px 0; padding: 8px; background: #eaeaea; border-radius: 5px; }
+
+    /* Product Page */
+    .product { border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 6px; }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Full Project Implementation</h1>
+</header>
+
+<!-- ============================= -->
+<!-- 1. PORTFOLIO WEBSITE SECTION  -->
+<!-- ============================= -->
+<section id="portfolio">
+    <h2>1. Personal Portfolio</h2>
+
+    <div class="nav">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+    </div>
+
+    <h3 id="about">About Me</h3>
+    <p>Hello! I am a web development intern learning HTML, CSS, and JavaScript.</p>
+
+    <h3 id="projects">Projects</h3>
+    <ul>
+        <li>To-Do App using LocalStorage</li>
+        <li>Product Listing Page with Filter & Sort</li>
+        <li>Responsive Web Designs</li>
+    </ul>
+
+    <h3 id="contact">Contact</h3>
+    <p>Email: example@gmail.com</p>
+</section>
+
+<!-- ============================= -->
+<!-- 2. TODO / NOTES APP SECTION   -->
+<!-- ============================= -->
+<section id="todoApp">
+    <h2>2. To-Do / Notes App (LocalStorage)</h2>
+
+    <input type="text" id="taskInput" placeholder="Enter task..." />
+    <button onclick="addTask()">Add</button>
+
+    <ul id="todoList"></ul>
+</section>
+
+<!-- ============================= -->
+<!-- 3. PRODUCT LISTING SECTION    -->
+<!-- ============================= -->
+<section id="products">
+    <h2>3. Product Listing with Filter + Sort</h2>
+
+    <select id="categoryFilter" onchange="filterProducts()">
+        <option value="all">All Categories</option>
+        <option value="electronics">Electronics</option>
+        <option value="fashion">Fashion</option>
+    </select>
+
+    <select id="sortSelect" onchange="sortProducts()">
+        <option value="none">Sort By</option>
+        <option value="lowHigh">Price: Low → High</option>
+        <option value="highLow">Price: High → Low</option>
+    </select>
+
+    <div id="productList"></div>
+</section>
+
+<script>
+// =======================
+// TODO APP WITH LOCALSTORAGE
+// =======================
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function showTasks() {
+    document.getElementById("todoList").innerHTML = "";
+    tasks.forEach((task, index) => {
+        document.getElementById("todoList").innerHTML += `
+            <li>${task} 
+                <button onclick="deleteTask(${index})">X</button>
+            </li>`;
+    });
+}
+showTasks();
+
+function addTask() {
+    let task = document.getElementById("taskInput").value;
+    if(task === "") return alert("Enter a task");
+    tasks.push(task);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    document.getElementById("taskInput").value = "";
+    showTasks();
+}
+
+function deleteTask(i) {
+    tasks.splice(i, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    showTasks();
+}
+
+// =======================
+// PRODUCT LISTING + FILTER + SORT
+// =======================
+let products = [
+    { name: "Smartphone", price: 12000, category: "electronics" },
+    { name: "Headphones", price: 1500, category: "electronics" },
+    { name: "T-Shirt", price: 500, category: "fashion" },
+    { name: "Shoes", price: 2000, category: "fashion" }
+];
+
+function displayProducts(list) {
+    document.getElementById("productList").innerHTML = "";
+    list.forEach(p => {
+        document.getElementById("productList").innerHTML += `
+            <div class="product">
+                <h3>${p.name}</h3>
+                <p>Price: ₹${p.price}</p>
+                <p>Category: ${p.category}</p>
+            </div>`;
+    });
+}
+displayProducts(products);
+
+function filterProducts() {
+    let cat = document.getElementById("categoryFilter").value;
+    if(cat === "all") displayProducts(products);
+    else displayProducts(products.filter(p => p.category === cat));
+}
+
+function sortProducts() {
+    let opt = document.getElementById("sortSelect").value;
+    let sorted = [...products];
+
+    if(opt === "lowHigh") sorted.sort((a,b) => a.price - b.price);
+    if(opt === "highLow") sorted.sort((a,b) => b.price - a.price);
+
+    displayProducts(sorted);
+}
+</script>
+
+</body>
+</html>
