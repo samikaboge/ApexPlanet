@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capstone Web App</title>
+
+<!-- ======================= -->
+<!-- MINIFIED SIMPLE CSS      -->
+<!-- ======================= -->
+<style>
+    body { margin: 0; font-family: Arial; background: #f7f7f7; }
+    header { background: #333; color: #fff; padding: 15px; text-align: center; }
+    .container { padding: 20px; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+    .card { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .card h3 { margin: 0; }
+    .controls { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+    button { padding: 8px 12px; border: none; background: #333; color: #fff; cursor: pointer; border-radius: 5px; }
+    button:hover { background: #555; }
+    footer { text-align: center; padding: 15px; background: #222; color: #fff; margin-top: 20px; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+        header { font-size: 18px; }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h2>Capstone Project – Simple E-Commerce Web App</h2>
+</header>
+
+<div class="container">
+
+    <h2>Products</h2>
+
+    <!-- Controls -->
+    <div class="controls">
+        <input type="text" id="search" placeholder="Search products..." oninput="searchProducts()">
+
+        <select id="category" onchange="filterCategory()">
+            <option value="all">All Categories</option>
+            <option value="electronics">Electronics</option>
+            <option value="fashion">Fashion</option>
+        </select>
+
+        <select id="sort" onchange="sortProducts()">
+            <option value="none">Sort By</option>
+            <option value="low">Price: Low → High</option>
+            <option value="high">Price: High → Low</option>
+        </select>
+    </div>
+
+    <!-- Product List -->
+    <div class="products" id="productList"></div>
+
+</div>
+
+<footer>
+    <p>Capstone Project | Fully Responsive | Optimized</p>
+</footer>
+
+<!-- ======================= -->
+<!-- MINIFIED SIMPLE JAVASCRIPT -->
+<!-- ======================= -->
+<script>
+const products = [
+    { name: "Smartphone", category: "electronics", price: 12000 },
+    { name: "Laptop", category: "electronics", price: 40000 },
+    { name: "T-Shirt", category: "fashion", price: 450 },
+    { name: "Shoes", category: "fashion", price: 1500 }
+];
+
+let displayed = [...products];
+
+function showProducts(list) {
+    const box = document.getElementById("productList");
+    box.innerHTML = "";
+    list.forEach(p => {
+        box.innerHTML += `
+            <div class="card">
+                <h3>${p.name}</h3>
+                <p>Category: ${p.category}</p>
+                <p>Price: ₹${p.price}</p>
+                <button onclick="addToCart('${p.name}')">Add to Cart</button>
+            </div>
+        `;
+    });
+}
+showProducts(displayed);
+
+function searchProducts() {
+    const val = document.getElementById("search").value.toLowerCase();
+    displayed = products.filter(p => p.name.toLowerCase().includes(val));
+    showProducts(displayed);
+}
+
+function filterCategory() {
+    const cat = document.getElementById("category").value;
+    displayed = cat === "all" ? products : products.filter(p => p.category === cat);
+    showProducts(displayed);
+}
+
+function sortProducts() {
+    const s = document.getElementById("sort").value;
+    if (s === "low") displayed.sort((a,b)=>a.price - b.price);
+    if (s === "high") displayed.sort((a,b)=>b.price - a.price);
+    showProducts(displayed);
+}
+
+function addToCart(name) {
+    alert(name + " added to cart!");
+}
+</script>
+
+</body>
+</html>
